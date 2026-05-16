@@ -485,7 +485,7 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 result = subprocess.run(
                     ["git", "add", "-A"],
                     cwd=PROJECT_DIR,
-                    capture_output=True, text=True, timeout=30
+                    capture_output=True, text=True, encoding="utf-8", timeout=30
                 )
                 if result.returncode != 0:
                     self.send_json({"ok": False, "error": f"git add 失败: {result.stderr}"})
@@ -494,13 +494,13 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 result = subprocess.run(
                     ["git", "commit", "-m", commit_msg],
                     cwd=PROJECT_DIR,
-                    capture_output=True, text=True, timeout=30
+                    capture_output=True, text=True, encoding="utf-8", timeout=30
                 )
 
                 result2 = subprocess.run(
                     ["git", "push"],
                     cwd=PROJECT_DIR,
-                    capture_output=True, text=True, timeout=60
+                    capture_output=True, text=True, encoding="utf-8", timeout=60
                 )
                 if result2.returncode != 0:
                     self.send_json({
