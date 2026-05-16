@@ -23,6 +23,13 @@ __pycache__/
 # 日志
 *.log
 
+# API 密钥和环境配置
+.env
+.env.local
+
+# 归档旧文件
+tools/_archive/
+
 # 编译输出
 *.exe
 *.dll
