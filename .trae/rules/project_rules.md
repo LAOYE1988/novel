@@ -5,10 +5,16 @@
 ## 一、项目概览
 
 Python 网文创作工作台，内置 Web 编辑器（端口 8899）调用 DeepSeek API，Git + GitHub 版本控制。
+MCP 服务器：`openviking`（http://localhost:1933/mcp，agent_id: novel）。
 
 ## 二、核心操作规范
 
-**启动：** `cd d:\trae\novel && python tools\小说工作台\server.py` → http://localhost:8899
+**启动：**
+```
+cd d:\trae\novel
+python tools\小说工作台\server.py
+```
+→ http://localhost:8899
 
 **版本控制（通过 `小说git操作` Skill 执行，禁止手动 Git）：**
 
@@ -25,7 +31,7 @@ Python 网文创作工作台，内置 Web 编辑器（端口 8899）调用 DeepS
 ## 三、编码规范
 
 - 不添加注释，保持现有代码风格，优先编辑已有文件
-- 禁止创建文档（*.md）或 README
+- 不主动创建无关文档；业务手册（docs/手册/）按需创建
 - 所有用户交互使用中文
 - Python：仅用标准库，UTF-8 编码
 - 前端：纯 HTML/JS/CSS，API 走 `http://localhost:8899/api/`
