@@ -1,35 +1,15 @@
-# 临时文件
-*.tmp
-*.temp
-~$*
-*.swp
-*.swo
-*~
+# DeepSeek API Key（不要上传！）
+tools/.env
+.env
 
-# 操作系统文件
-.DS_Store
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 系统文件
 Thumbs.db
-desktop.ini
+.DS_Store
 
 # 编辑器备份
-*.bak
-*.backup
-
-# Python 缓存（如果有脚本）
-__pycache__/
-*.py[cod]
-*$py.class
-
-# 日志
-*.log
-
-# API 密钥和环境配置
-.env
-.env.local
-
-# 归档旧文件
-tools/_archive/
-
-# 编译输出
-*.exe
-*.dll
+*~
+*.swp
