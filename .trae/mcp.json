@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "openviking": {
+      "url": "http://localhost:1933/mcp",
+      "agent_id": "novel"
+    }
+  }
+}

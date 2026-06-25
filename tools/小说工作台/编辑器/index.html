@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小说创作工作台</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Setting/Outline tab panels and content styling */
+#center-tabs { display:flex; background:var(--bg2); border-bottom:1px solid var(--border); flex-shrink:0; }
+.center-tab { padding:6px 16px; font-size:12px; color:var(--text3); cursor:pointer; border-bottom:2px solid transparent; transition:.2s; user-select:none; }
+.center-tab:hover { color:var(--text2); }
+.center-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+.setting-tabs, .outline-tabs { display:flex; flex-wrap:wrap; gap:2px; padding:6px 8px; background:var(--bg); border-bottom:1px solid var(--border); flex-shrink:0; }
+.setting-tab, .outline-tab { font-size:11px; padding:3px 10px; border-radius:3px; cursor:pointer; color:var(--text3); transition:.2s; border:1px solid transparent; }
+.setting-tab:hover, .outline-tab:hover { color:var(--text2); background:var(--bg3); }
+.setting-tab.active, .outline-tab.active { color:var(--accent); background:rgba(124,106,255,.1); border-color:rgba(124,106,255,.2); }
+
+.setting-content, .outline-content { display:none; flex-direction:column; flex:1; overflow:hidden; }
+.setting-content.active, .outline-content.active { display:flex; }
+.setting-content textarea, .outline-content textarea { flex:1; width:100%; min-height:150px; background:var(--bg); color:var(--text); font-family:var(--font-mono); font-size:13px; line-height:1.6; border:none; outline:none; resize:none; padding:8px; }
+.setting-content .toolbar, .outline-content .toolbar { display:flex; justify-content:space-between; align-items:center; padding:4px 8px; background:var(--bg2); border-top:1px solid var(--border); flex-shrink:0; }
+.setting-content .toolbar button, .outline-content .toolbar button { font-size:10px; padding:3px 10px; border-radius:3px; border:1px solid var(--border); background:var(--bg3); color:var(--text2); cursor:pointer; transition:.2s; }
+.setting-content .toolbar button:hover, .outline-content .toolbar button:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ===== Top Bar ===== -->
+  <div id="topbar">
+    <div>
+      <span class="logo">✍ 小说创作工作台</span>
+      <span class="novel-name" style="display:flex;align-items:center;gap:3px;">
+        <select id="novel-select" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer;outline:none;"></select>
+        <button class="btn-sm" id="btn-rename-novel" title="重命名当前小说">✏️</button>
+        <button class="btn-sm" id="btn-new-novel" title="新建小说">📕</button>
+        <button class="btn-sm" id="btn-delete-novel" title="删除当前小说" style="color:var(--red);">🗑</button>
+      </span>
+    </div>
+    <div class="spacer"></div>
+    <div class="stat">
+      <span id="stat-chapters">0章</span>
+      <span id="stat-chars">0字</span>
+      <span id="stat-progress" style="width:120px">
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:1px;">进度</span>
+        <div class="progress-track" style="height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;">
+          <div class="fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .3s;"></div>
+        </div>
+      </span>
+    </div>
+    <button class="btn" id="btn-new-chapter" title="新建章节">📄 新建章节</button>
+    <button class="btn" id="btn-new-volume" title="新建卷">📁 新增卷</button>
+    <button class="btn" id="btn-history" title="历史版本">⏱ 历史版本</button>
+    <button class="btn" id="btn-style" title="文风示例">✒️ 文风</button>
+    <button class="btn" id="btn-trash" title="回收站">🗑 回收站</button>
+    <button class="btn" id="btn-save-all" style="background:var(--accent);color:#fff;border-color:var(--accent);">💾 保存全部</button>
+    <button class="btn" id="btn-backup" title="每日备份">📦 每日备份</button>
+    <button class="btn" id="btn-git-backup" title="Git 备份" style="background:var(--accent2);color:#fff;border-color:var(--accent2);">⬆ Git 备份</button>
+    <button class="btn" id="btn-reset-layout" title="重置为默认布局" style="font-size:11px;">🔁 重置布局</button>
+  </div>
+
+  <!-- ===== Main Three-Panel Layout ===== -->
+  <div id="main">
+
+    <!-- ===== Panel 1: Editor (Left) ===== -->
+    <div class="panel" id="panel-editor">
+      <div class="panel-header">
+        <span>📝 手写编辑器</span>
+        <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;">← AI 只读，绝不写入 →</span>
+        <div class="tools">
+          <button class="collapse-btn" title="收起">◀</button>
+        </div>
+      </div>
+      <!-- Chapter Tree -->
+      <div id="chapter-tree"></div>
+      <div class="divider-h" id="divider-tree" title="拖拽调整章节树与编辑器比例"></div>
+      <!-- Editor -->
+      <div id="editor-area">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px;flex-shrink:0;">
+          <span id="editor-chapter-title" style="font-size:13px;font-weight:600;color:var(--text2);">请选择章节</span>
+        </div>
+        <textarea id="editor-textarea" placeholder="在这里手写你的小说正文...&#10;&#10;提示：&#10;· 左侧目录可拖拽排序&#10;· 双击章节名可重命名&#10;· AI 助手的结果在右侧面板，不自动写入此处"></textarea>
+        <div id="editor-stats">
+          <span>字数：<strong id="word-count" style="color:var(--text);">0</strong></span>
+          <span>目标：5000字/章</span>
+          <span id="auto-save-hint" style="color:var(--text3);font-size:10px;">⏺ 自动保存中</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider 1 -->
+    <div class="divider"></div>
+
+    <!-- ===== Panel 2: Setting + Outline + Word Bank (Center) ===== -->
+    <div class="panel" id="panel-center" style="display:flex;flex-direction:column;flex:1;min-height:0;min-width:280px;">
+      <div class="panel-header">
+        <span>📚 设定库 + 大纲</span>
+        <div class="tools">
+          <button class="collapse-btn" title="收起">◀</button>
+        </div>
+      </div>
+      <!-- Center Tabs -->
+      <div id="center-tabs" class="center-tabs">
+        <div class="center-tab active" data-panel="setting">📖 设定库</div>
+        <div class="center-tab" data-panel="outline">📋 大纲</div>
+        <div class="center-tab" data-panel="wordbank">📖 词库</div>
+      </div>
+
+      <!-- Setting Panel -->
+      <div class="center-panel active" id="center-setting">
+        <div class="setting-tabs">
+          <div class="setting-tab active" data-panel="人物">👤 人物</div>
+          <div class="setting-tab" data-panel="世界观">🌍 世界观</div>
+          <div class="setting-tab" data-panel="关系图">🔗 关系图</div>
+          <div class="setting-tab" data-panel="场景">🎬 场景</div>
+          <div class="setting-tab" data-panel="伏笔">📍 伏笔</div>
+        </div>
+        <div class="setting-content active" id="sc-人物">
+          <div class="entry-cards" id="cards-人物">
+            <div class="entry-card-empty">加载中...</div>
+          </div>
+          <div class="toolbar" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+            <button class="save-btn" onclick="savePersonCards()">💾 保存人物</button>
+            <button class="save-btn" onclick="addPersonCard()">➕ 新增角色</button>
+          </div>
+        </div>
+        <div class="setting-content" id="sc-世界观">
+          <textarea placeholder="世界观设定..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">世界背景、势力、力量体系、规则</span><button class="save-btn">💾 保存</button></div>
+        </div>
+        <div class="setting-content" id="sc-关系图">
+          <textarea placeholder="人物关系图谱..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">人物关系、势力关系、情感线</span><button class="save-btn">💾 保存</button></div>
+        </div>
+        <div class="setting-content" id="sc-场景">
+          <div class="entry-cards" id="cards-场景">
+            <div class="entry-card-empty">加载中...</div>
+          </div>
+          <div class="toolbar" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+            <button class="save-btn" onclick="saveSceneCards()">💾 保存场景</button>
+            <button class="save-btn" onclick="addSceneCard()">➕ 新增场景</button>
+          </div>
+        </div>
+        <div class="setting-content" id="sc-伏笔">
+          <textarea placeholder="伏笔清单..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">伏笔内容、埋设章节、回收计划</span><button class="save-btn">💾 保存</button></div>
+        </div>
+      </div>
+
+      <!-- Outline Panel -->
+      <div class="center-panel" id="center-outline">
+        <div class="outline-tabs">
+          <div class="outline-tab active" data-panel="总纲">📑 总纲</div>
+          <div class="outline-tab" data-panel="分卷">📂 分卷</div>
+          <div class="outline-tab" data-panel="逐章细纲">📄 逐章细纲</div>
+        </div>
+        <div class="outline-content active" id="oc-总纲">
+          <textarea placeholder="一句话梗概、核心冲突、三幕式结构..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">故事主线、关键转折、结局预设</span><button class="save-btn">💾 保存</button></div>
+        </div>
+        <div class="outline-content" id="oc-分卷">
+          <textarea placeholder="分卷规划：每卷章节范围、核心事件、人物成长..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">卷名、章节范围、核心冲突</span><button class="save-btn">💾 保存</button></div>
+        </div>
+        <div class="outline-content" id="oc-逐章细纲">
+          <textarea placeholder="逐章细纲：每章场景、出场人物、核心事件、爽点钩子..."></textarea>
+          <div class="toolbar"><span style="font-size:10px;color:var(--text3);">每章场景、人物、事件、爽点</span><button class="save-btn">💾 保存</button></div>
+        </div>
+      </div>
+
+      <!-- Word Bank Panel (inside center panel, replaces standalone) -->
+      <div class="center-panel" id="center-wordbank">
+        <div style="display:flex;gap:4px;padding:6px 8px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;align-items:center;">
+          <input id="wb-query" type="text" placeholder="自定义需求（如：形容主角很愤怒、山景很美）" style="flex:1;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:4px 8px;font-size:12px;outline:none;box-sizing:border-box;min-width:0;">
+          <button id="wb-query-btn" style="font-size:11px;padding:4px 12px;border-radius:3px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;flex-shrink:0;">确定</button>
+        </div>
+        <div id="wordbank-content" style="flex:1;overflow-y:auto;padding:10px 12px;font-size:13px;line-height:1.6;">
+          <div style="text-align:center;color:var(--text3);margin-top:40px;">
+            📖 点击下方「🔄 刷新」获取词汇<br>
+            <span style="font-size:11px;">根据当前人设、世界观、正文上下文自动生成</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0;">
+          <span style="font-size:11px;color:var(--text3);">风格：</span>
+          <select id="wb-style" style="flex:1;font-size:11px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:2px 6px;outline:none;">
+            <option value="auto">自动推荐</option>
+            <option value="唯美风">唯美风</option>
+            <option value="简洁风">简洁风</option>
+            <option value="古风">古风</option>
+            <option value="现代风">现代风</option>
+          </select>
+          <button class="refresh-wb-btn" id="wb-refresh-footer" style="font-size:11px;padding:4px 14px;border-radius:3px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;">🔄 刷新</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider 2 -->
+    <div class="divider"></div>
+
+    <!-- ===== Right Column: Agents only ===== -->
+    <div class="panel" id="panel-agents">
+      <div class="panel-header">
+        <span>🤖 9 Agent 辅助面板</span>
+        <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;">结果仅作参考</span>
+        <div class="tools">
+          <button class="collapse-btn" title="收起">◀</button>
+        </div>
+      </div>
+      <!-- Agent toolbar -->
+      <div id="agent-toolbar"></div>
+      <!-- Context info -->
+      <div id="agent-context"></div>
+      <!-- Quick info buttons -->
+      <div id="agent-info-btns" style="display:flex;gap:3px;padding:4px 8px;flex-shrink:0;border-bottom:1px solid var(--border);"></div>
+      <!-- Output -->
+      <div id="agent-output">
+        <div style="text-align:center;color:var(--text3);font-size:12px;margin-top:40px;">
+          🤖 选择一个 Agent 开始对话<br>
+          <span style="font-size:11px;color:var(--text3);">AI 生成内容仅显示在此，不会写入左侧编辑器</span>
+        </div>
+      </div>
+      <!-- Input -->
+      <div id="agent-input-area">
+        <input id="agent-input" type="text" placeholder="@Agent 输入指令... 例如：@写手 帮我写一段打斗场景参考">
+        <button id="agent-send">发送</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Custom Modal Dialog (replaces prompt/confirm) -->
+<div id="custom-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;min-width:320px;max-width:500px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+    <div id="modal-title" style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;"></div>
+    <div id="modal-body" style="font-size:12px;color:var(--text2);margin-bottom:12px;white-space:pre-wrap;line-height:1.6;"></div>
+    <input id="modal-input" type="text" style="display:none;width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:12px;">
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button id="modal-cancel" style="font-size:11px;padding:5px 16px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;">取消</button>
+      <button id="modal-ok" style="font-size:11px;padding:5px 16px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

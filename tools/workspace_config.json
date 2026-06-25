@@ -1,0 +1,41 @@
+{
+  "_description": "工作区配置 — {novel} 会自动替换为当前小说名",
+  "base_dir": "..",
+  "workspaces": {
+    "素材库": {
+      "path": "素材库",
+      "description": "写作素材、参考资料（所有小说共享）",
+      "read": true,
+      "write": true,
+      "shared": true
+    },
+    "临时文件": {
+      "path": "临时文件",
+      "description": "草稿、未分类内容（所有小说共享）",
+      "read": true,
+      "write": true,
+      "shared": true
+    },
+    "大纲": {
+      "path": "{novel}/大纲",
+      "description": "当前小说的故事大纲、章纲",
+      "read": true,
+      "write": true,
+      "shared": false
+    },
+    "文稿": {
+      "path": "{novel}/文稿",
+      "description": "当前小说的正文、章节文件",
+      "read": true,
+      "write": true,
+      "shared": false
+    },
+    "设定集": {
+      "path": "{novel}/设定集",
+      "description": "当前小说的人物设定、世界观",
+      "read": true,
+      "write": true,
+      "shared": false
+    }
+  }
+}
