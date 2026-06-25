@@ -19,7 +19,7 @@ if ($LASTEXITCODE -ne 0) { Write-Host "  失败: git add 出错" -ForegroundColo
 git commit -m "$msg"
 if ($LASTEXITCODE -ne 0) { Write-Host "  失败: git commit 出错" -ForegroundColor Red; exit 1 }
 
-git push
+git push origin master
 if ($LASTEXITCODE -ne 0) { Write-Host "  失败: git push 出错" -ForegroundColor Red; exit 1 }
 
-Write-Host "`n  提交成功！已安全推送到 Gitee`n" -ForegroundColor Green
+Write-Host "`n  提交成功！已安全推送到远程仓库`n" -ForegroundColor Green
