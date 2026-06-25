@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网文创作 · 8 Agent 可视化思维面板</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        dark: { 50: '#f0f0f5', 100: '#d0d0dd', 200: '#a0a0bb', 300: '#707099', 400: '#404066', 500: '#1a1a2e', 600: '#151525', 700: '#10101c', 800: '#0a0a14', 900: '#05050a' },
+        agent: { red: '#ef4444', yellow: '#eab308', green: '#22c55e', orange: '#f97316', cyan: '#06b6d4', purple: '#a855f7' }
+      }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark-900 text-dark-50 font-sans h-screen overflow-hidden">
+
+<div id="app" class="h-screen flex flex-col">
+
+  <!-- === Header === -->
+  <header class="flex items-center justify-between px-6 py-3 bg-dark-800 border-b border-dark-600 shrink-0">
+    <div class="flex items-center gap-4">
+      <h1 class="text-lg font-bold bg-gradient-to-r from-agent-red via-agent-purple to-agent-cyan bg-clip-text text-transparent">网文创作 · 8 Agent 可视化思维面板</h1>
+      <span class="text-xs px-2 py-0.5 rounded bg-dark-600 text-dark-200" id="headerNovel">我的第一本小说</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="btnSaveAll" class="text-xs px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white transition">💾 保存全部</button>
+      <button id="btnRefresh" class="text-xs px-3 py-1.5 rounded bg-dark-600 hover:bg-dark-400 text-dark-200 transition">⟳ 刷新</button>
+    </div>
+  </header>
+
+  <!-- === Main Body === -->
+  <div class="flex flex-1 overflow-hidden">
+
+    <!-- ========== 左侧: 思维导图 ========== -->
+    <section class="w-[420px] min-w-[420px] bg-dark-800 border-r border-dark-600 flex flex-col overflow-hidden">
+
+      <!-- 思维导图画布 -->
+      <div class="flex-1 overflow-y-auto p-4" id="mindmapCanvas">
+        <svg class="absolute inset-0 pointer-events-none" id="mindmapLines" style="z-index:0"></svg>
+
+        <!-- 中心节点：主控 -->
+        <div class="flex justify-center mb-6">
+          <div class="agent-node" data-id="main-writer">
+            <div class="node-card node-red shadow-lg">
+              <div class="text-lg">🎯</div>
+              <div class="font-bold text-sm">网文主笔·总控</div>
+              <div class="text-[10px] opacity-70">统筹调度 · 最终定稿</div>
+              <div class="mt-1 status-badge" data-id="main-writer">空闲</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第二层：三大分支 -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <!-- 分支1: 基础设定 -->
+          <div class="branch-col">
+            <div class="branch-label text-agent-yellow">📚 基础设定</div>
+            <div class="agent-node mb-2" data-id="setting-manager">
+              <div class="node-card node-yellow text-xs">
+                <div class="font-semibold">设定管家·书库</div>
+                <div class="text-[10px] opacity-70">人设/战力/伏笔</div>
+                <div class="mt-1 status-badge" data-id="setting-manager">空闲</div>
+              </div>
+            </div>
+            <div class="agent-node" data-id="style-feeder">
+              <div class="node-card node-yellow text-xs">
+                <div class="font-semibold">书风认知·投喂专员</div>
+                <div class="text-[10px] opacity-70">文风分析/匹配</div>
+                <div class="mt-1 status-badge" data-id="style-feeder">空闲</div>
+              </div>
+            </div>
+          </div>
+          <!-- 分支2: 剧情架构 -->
+          <div class="branch-col">
+            <div class="branch-label text-agent-green">🏗️ 剧情架构</div>
+            <div class="agent-node mb-2" data-id="outline-architect">
+              <div class="node-card node-green text-xs">
+                <div class="font-semibold">大纲架构师·章纲</div>
+                <div class="text-[10px] opacity-70">主线/章节/节奏</div>
+                <div class="mt-1 status-badge" data-id="outline-architect">空闲</div>
+              </div>
+            </div>
+            <div class="agent-node" data-id="plot-analyzer">
+              <div class="node-card node-green text-xs">
+                <div class="font-semibold">爆款解构·剧情分析师</div>
+                <div class="text-[10px] opacity-70">对标/优化/诊断</div>
+                <div class="mt-1 status-badge" data-id="plot-analyzer">空闲</div>
+              </div>
+            </div>
+          </div>
+          <!-- 分支3: 正文 + 创意 -->
+          <div class="branch-col">
+            <div class="branch-label text-agent-orange">✍️ 正文生成</div>
+            <div class="agent-node mb-2" data-id="content-writer">
+              <div class="node-card node-orange text-xs">
+                <div class="font-semibold">正文写手·去AI</div>
+                <div class="text-[10px] opacity-70">正文产出/去AI感</div>
+                <div class="mt-1 status-badge" data-id="content-writer">空闲</div>
+              </div>
+            </div>
+            <div class="branch-label text-agent-cyan mt-2">💡 灵感创意</div>
+            <div class="agent-node mb-2" data-id="inspiration-engine">
+              <div class="node-card node-cyan text-xs">
+                <div class="font-semibold">灵感引擎·爽点</div>
+                <div class="text-[10px] opacity-70">爽点/反转/卡文急救</div>
+                <div class="mt-1 status-badge" data-id="inspiration-engine">空闲</div>
+              </div>
+            </div>
+            <div class="branch-label text-agent-purple mt-2">🔍 审核优化</div>
+            <div class="agent-node" data-id="editor-polisher">
+              <div class="node-card node-purple text-xs">
+                <div class="font-semibold">金牌责编·润色</div>
+                <div class="text-[10px] opacity-70">毒点/节奏/AI感检查</div>
+                <div class="mt-1 status-badge" data-id="editor-polisher">空闲</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 底部：@调用输入 -->
+      <div class="p-3 border-t border-dark-600 shrink-0">
+        <div class="flex gap-2">
+          <input id="atInput" type="text" placeholder="@Agent 输入指令..." class="flex-1 bg-dark-700 border border-dark-500 rounded px-3 py-2 text-sm text-dark-50 placeholder-dark-300 outline-none focus:border-agent-cyan/50">
+          <button id="btnAtSend" class="px-4 py-2 rounded bg-agent-cyan/20 text-agent-cyan border border-agent-cyan/30 hover:bg-agent-cyan/30 text-sm transition">发送</button>
+        </div>
+        <div class="flex gap-1 mt-2 flex-wrap" id="atMentions">
+          <span class="text-[10px] text-dark-300 mr-1">快速 @</span>
+          <span class="at-tag" data-id="main-writer">@主笔</span>
+          <span class="at-tag" data-id="setting-manager">@设定</span>
+          <span class="at-tag" data-id="style-feeder">@文风</span>
+          <span class="at-tag" data-id="outline-architect">@大纲</span>
+          <span class="at-tag" data-id="plot-analyzer">@剧情</span>
+          <span class="at-tag" data-id="content-writer">@写手</span>
+          <span class="at-tag" data-id="inspiration-engine">@灵感</span>
+          <span class="at-tag" data-id="editor-polisher">@责编</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 右侧: 状态表 + 聊天 ========== -->
+    <section class="flex-1 flex flex-col overflow-hidden bg-dark-900">
+
+      <!-- 工具栏 -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-dark-800 border-b border-dark-600 shrink-0">
+        <button class="tab-btn active" data-tab="status">📊 实时状态表</button>
+        <button class="tab-btn" data-tab="chat">💬 对话记录</button>
+        <button class="tab-btn" data-tab="board">📋 创作看板</button>
+        <button class="tab-btn" data-tab="ws">📁 工作区</button>
+        <span class="flex-1"></span>
+        <span class="text-[10px] text-dark-400" id="lastSaved">—</span>
+      </div>
+
+      <!-- ===== Tab: 状态表 ===== -->
+      <div class="tab-panel active" id="tab-status">
+        <div class="flex-1 overflow-auto p-4">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-dark-800 text-dark-200 text-xs uppercase tracking-wider">
+                <th class="text-left py-2 px-3 w-20">Agent</th>
+                <th class="text-left py-2 px-3 w-24">类别</th>
+                <th class="text-left py-2 px-3 w-24">状态</th>
+                <th class="text-left py-2 px-3">当前任务</th>
+                <th class="text-left py-2 px-3 w-24">进度</th>
+                <th class="text-left py-2 px-3">备注</th>
+                <th class="text-center py-2 px-3 w-16">操作</th>
+              </tr>
+            </thead>
+            <tbody id="statusTableBody"></tbody>
+          </table>
+          <div class="mt-4 flex gap-2">
+            <button id="btnAddTask" class="text-xs px-3 py-1.5 rounded bg-dark-700 hover:bg-dark-500 text-dark-200 border border-dark-500 transition">+ 新增任务</button>
+            <button id="btnBatchUpdate" class="text-xs px-3 py-1.5 rounded bg-dark-700 hover:bg-dark-500 text-dark-200 border border-dark-500 transition">⟳ 批量同步看板</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab: 对话记录 ===== -->
+      <div class="tab-panel" id="tab-chat">
+        <div class="flex flex-col h-full">
+          <div class="flex-1 overflow-auto p-4 space-y-3" id="chatLog">
+            <div class="text-center text-dark-400 text-sm mt-12">💬 在左侧 @Agent 开始对话</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab: 创作看板 ===== -->
+      <div class="tab-panel" id="tab-board">
+        <div class="flex-1 overflow-auto p-4">
+          <pre id="boardContent" class="text-xs leading-relaxed text-dark-200 whitespace-pre-wrap font-sans"></pre>
+        </div>
+      </div>
+
+      <!-- ===== Tab: 工作区 ===== -->
+      <div class="tab-panel" id="tab-ws">
+        <div class="flex h-full">
+          <div class="w-40 border-r border-dark-600 p-2 overflow-auto" id="wsSidebar"></div>
+          <div class="flex-1 p-4 overflow-auto" id="wsContent">
+            <div class="text-dark-400 text-sm mt-12 text-center">选择工作区查看文件</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

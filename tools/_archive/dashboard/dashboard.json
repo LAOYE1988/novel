@@ -1,0 +1,62 @@
+{
+  "currentNovel": "我的第一本小说",
+  "agents": {
+    "main-writer": {
+      "name": "网文主笔·总控",
+      "status": "已完成",
+      "task": "人类科技突破纳米技术瓶颈，部分势力妄图通过纳米改造实现“人类进化”，暗中启动秘密实验。表面爆发“AI叛乱战争”，实际上是通过战争来激发人类潜能，促进纳米改造深化。",
+      "progress": 0,
+      "notes": ""
+    },
+    "setting-manager": {
+      "name": "设定管家·书库",
+      "status": "已完成",
+      "task": "书名叫做异类",
+      "progress": 0,
+      "notes": ""
+    },
+    "style-feeder": {
+      "name": "书风认知·投喂专员",
+      "status": "空闲",
+      "task": "",
+      "progress": 0,
+      "notes": ""
+    },
+    "outline-architect": {
+      "name": "大纲架构师·章纲",
+      "status": "空闲",
+      "task": "",
+      "progress": 0,
+      "notes": ""
+    },
+    "plot-analyzer": {
+      "name": "爆款解构·剧情分析师",
+      "status": "空闲",
+      "task": "",
+      "progress": 0,
+      "notes": ""
+    },
+    "content-writer": {
+      "name": "正文写手·去AI",
+      "status": "已完成",
+      "task": "小说名：异类",
+      "progress": 0,
+      "notes": ""
+    },
+    "inspiration-engine": {
+      "name": "灵感引擎·爽点",
+      "status": "空闲",
+      "task": "",
+      "progress": 0,
+      "notes": ""
+    },
+    "editor-polisher": {
+      "name": "金牌责编·润色",
+      "status": "空闲",
+      "task": "",
+      "progress": 0,
+      "notes": ""
+    }
+  },
+  "worklog": []
+}

@@ -1,0 +1,119 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --red: #ef4444; --yellow: #eab308; --green: #22c55e;
+  --orange: #f97316; --cyan: #06b6d4; --purple: #a855f7;
+  --gray: #707099;
+}
+
+/* Mind Map Nodes */
+.agent-node { cursor: pointer; transition: transform .2s; position: relative; }
+.agent-node:hover { transform: translateY(-2px); }
+.agent-node.active .node-card { box-shadow: 0 0 20px rgba(124,106,255,.4); border-color: #7c6aff; }
+
+.node-card {
+  background: rgba(16,16,28,.9);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  transition: all .3s;
+}
+.node-red    { border-color: rgba(239,68,68,.3); box-shadow: 0 4px 16px rgba(239,68,68,.1); }
+.node-yellow { border-color: rgba(234,179,8,.3); box-shadow: 0 4px 16px rgba(234,179,8,.1); }
+.node-green  { border-color: rgba(34,197,94,.3); box-shadow: 0 4px 16px rgba(34,197,94,.1); }
+.node-orange { border-color: rgba(249,115,22,.3); box-shadow: 0 4px 16px rgba(249,115,22,.1); }
+.node-cyan   { border-color: rgba(6,182,212,.3); box-shadow: 0 4px 16px rgba(6,182,212,.1); }
+.node-purple { border-color: rgba(168,85,247,.3); box-shadow: 0 4px 16px rgba(168,85,247,.1); }
+
+.status-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.05);
+  color: #707099;
+  transition: all .3s;
+}
+.status-badge.working { background: rgba(34,197,94,.15); color: #4ade80; }
+.status-badge.idle    { background: rgba(255,255,255,.05); color: #707099; }
+
+.branch-label { font-size: 11px; font-weight: 600; letter-spacing: .5px; padding: 4px 0; }
+
+/* Quick @ Tags */
+.at-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(124,106,255,.1);
+  color: #7c6aff;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid rgba(124,106,255,.2);
+}
+.at-tag:hover { background: rgba(124,106,255,.2); }
+
+/* Tabs */
+.tab-btn {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: #707099;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all .2s;
+}
+.tab-btn:hover { color: #d0d0dd; background: rgba(255,255,255,.03); }
+.tab-btn.active {
+  color: #c084fc;
+  background: rgba(168,85,247,.1);
+  border-color: rgba(168,85,247,.2);
+}
+.tab-panel { display: none; flex:1; flex-direction: column; overflow: hidden; }
+.tab-panel.active { display: flex; }
+
+/* Status Table */
+#statusTableBody tr {
+  transition: all .2s;
+}
+#statusTableBody tr:hover { background: rgba(255,255,255,.02); }
+#statusTableBody td {
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  padding: 8px 12px;
+  vertical-align: middle;
+}
+.inline-edit {
+  background: transparent;
+  border: none;
+  color: #d0d0dd;
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all .2s;
+}
+.inline-edit:hover { background: rgba(255,255,255,.05); }
+.inline-edit:focus { background: rgba(124,106,255,.1); border: 1px solid rgba(124,106,255,.3); }
+select.inline-edit { cursor: pointer; appearance: auto; }
+progress.progress-bar {
+  width: 100%; height: 6px;
+  border-radius: 3px; overflow: hidden;
+  background: rgba(255,255,255,.08);
+  border: none;
+}
+progress.progress-bar::-webkit-progress-bar { background: rgba(255,255,255,.08); border-radius: 3px; }
+progress.progress-bar::-webkit-progress-value { border-radius: 3px; transition: width .5s; }
+progress.progress-bar::-moz-progress-bar { border-radius: 3px; transition: width .5s; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.15); }
+
+/* Chat messages */
+.chat-msg { animation: fadeIn .3s; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
