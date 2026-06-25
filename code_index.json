@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-06-25 21:40",
+  "files": {
+    "tools/config.py": {
+      "functions": {
+        "is_configured": {},
+        "get_api_key": {},
+        "get_model": {},
+        "get_base_url": {}
+      }
+    },
+    "tools/deepseek_api.py": {
+      "functions": {
+        "chat_with_agent": {},
+        "build_request_payload": {},
+        "handle_api_response": {}
+      }
+    },
+    "tools/board_manager.py": {
+      "functions": {
+        "load_board": {},
+        "save_board": {},
+        "get_section": {},
+        "update_section": {},
+        "toggle_checkbox": {},
+        "update_fill_text": {},
+        "update_fill_lines": {}
+      }
+    },
+    "tools/workspace_manager.py": {
+      "functions": {
+        "get_novel_path": {},
+        "list_files": {},
+        "read_file": {},
+        "write_file": {},
+        "delete_file": {},
+        "create_novel": {},
+        "switch_novel": {},
+        "delete_novel": {},
+        "list_novels": {},
+        "load_config": {},
+        "save_config": {}
+      }
+    },
+    "tools/小说工作台/server.py": {
+      "api_routes": {
+        "GET /api/agents": {},
+        "GET /api/board": {},
+        "GET /api/board/section": {},
+        "GET /api/workspaces": {},
+        "GET /api/workspace/list": {},
+        "GET /api/workspace/read": {},
+        "GET /api/novels": {},
+        "GET /api/novel/chapters": {},
+        "GET /api/novel/chapter/read": {},
+        "POST /api/chat": {},
+        "POST /api/board/update": {},
+        "POST /api/novel/create": {},
+        "POST /api/novel/switch": {},
+        "POST /api/workspace/save": {},
+        "POST /api/novel/backup/today": {},
+        "POST /api/novel/backup/cloud": {},
+        "POST /api/novel/backup/git": {}
+      },
+      "functions": {
+        "main": {},
+        "WorkbenchHandler": {}
+      }
+    },
+    "tools/小说工作台/编辑器/app.js": {
+      "functions": {}
+    },
+    "tools/小说工作台/编辑器/index.html": {},
+    "tools/小说工作台/编辑器/style.css": {}
+  }
+}
